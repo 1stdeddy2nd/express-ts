@@ -1,0 +1,24 @@
+### GET ALL
+GET http://localhost:3000/locations
+
+### CREATE
+POST http://localhost:3000/locations
+Content-Type: application/json
+
+{
+    "name": "Australia",
+    "timezone": "Australia/Sydney"
+}
+
+### UPDATE
+PUT http://localhost:3000/locations/5
+Content-Type: application/json
+
+{
+    "name": "Indonesia",
+    "timezone": "Asia/Jakarta"
+}
+
+### DELETE BY ID
+DELETE http://localhost:3000/locations/4
+Content-Type: application/json
