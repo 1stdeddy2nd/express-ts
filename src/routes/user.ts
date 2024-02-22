@@ -11,6 +11,7 @@ router.post(
     body("id").isEmpty(),
     body("first_name").isString().notEmpty(),
     body("last_name").isString().notEmpty(),
+    body("email").isEmail().isString().notEmpty(),
     body("birth_date").isString().notEmpty(),
     body("location_id").isInt().notEmpty(),
   ],
@@ -21,7 +22,8 @@ router.post(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { first_name, last_name, birth_date, location_id } = req.body;
+      const { first_name, last_name, email, birth_date, location_id } =
+        req.body;
 
       // check location exists or not by id
       const findLocation = await prisma.location.findFirst({
@@ -35,6 +37,7 @@ router.post(
         data: {
           first_name,
           last_name,
+          email,
           birth_date: new Date(birth_date),
           location_id,
         },
@@ -54,6 +57,7 @@ router.put(
   [
     body("first_name").isString(),
     body("last_name").isString(),
+    body("email").isEmail().isString(),
     body("birth_date").isString(),
     body("location_id").isInt(),
   ],
@@ -64,7 +68,8 @@ router.put(
       if (!errors.isEmpty()) {
         return res.status(400).json({ errors: errors.array() });
       }
-      const { first_name, last_name, birth_date, location_id } = req.body;
+      const { first_name, last_name, email, birth_date, location_id } =
+        req.body;
 
       // check user exists or not by id
       const findUser = await prisma.user.findFirst({
@@ -87,6 +92,7 @@ router.put(
         data: {
           first_name,
           last_name,
+          email,
           birth_date: new Date(birth_date),
           location_id,
         },

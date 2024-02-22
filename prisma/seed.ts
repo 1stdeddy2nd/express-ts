@@ -1,7 +1,12 @@
 import { prisma } from "../prisma/client";
+import { faker } from "@faker-js/faker";
+import moment from "moment-timezone";
 
 async function seed() {
   console.info("seeding starting...");
+  await prisma.user.deleteMany();
+  await prisma.location.deleteMany();
+
   await prisma.location.createMany({
     data: [
       {
@@ -20,6 +25,16 @@ async function seed() {
         timezone: "Asia/Tokyo",
       },
     ],
+  });
+
+  await prisma.user.createMany({
+    data: [...Array(50)].map(() => ({
+      email: faker.internet.email(),
+      birth_date: new Date(),
+      first_name: faker.person.firstName(),
+      last_name: faker.person.lastName(),
+      location_id: 1,
+    })),
   });
 }
 

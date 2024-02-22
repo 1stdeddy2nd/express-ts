@@ -9,6 +9,7 @@ Content-Type: application/json
     "first_name": "Deddy",
     "last_name": "Setiawan",
     "birth_date": "1999-01-04",
+    "email": "deddy@email.com",
     "location_id": 1
 }
 
