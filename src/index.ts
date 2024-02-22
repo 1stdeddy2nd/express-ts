@@ -65,7 +65,7 @@ const handleCronSendyMsg = async () => {
 };
 
 // comment or uncomment to handle scheduler
-// handleCronSendyMsg();
+handleCronSendyMsg();
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);
