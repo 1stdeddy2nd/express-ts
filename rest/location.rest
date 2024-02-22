@@ -11,7 +11,7 @@ Content-Type: application/json
 }
 
 ### UPDATE
-PUT http://localhost:3000/locations/5
+PUT http://localhost:3000/locations/3
 Content-Type: application/json
 
 {

@@ -1,19 +1,10 @@
-import express from "express";
-import userRoute from "./routes/user";
-import locationRoute from "./routes/location";
-import cron from "node-cron";
 import moment from "moment-timezone";
 import axios from "axios";
 import { prisma } from "../prisma/client";
 import schedule from "node-schedule";
+import app from "./app";
 
-const app = express();
 const port = process.env.PORT || 3000;
-
-app.use(express.json());
-
-app.use("/users", userRoute);
-app.use("/locations", locationRoute);
 
 // send birthday message
 const handlSendMsg = (fullName: string, email: string) => {
@@ -73,7 +64,8 @@ const handleCronSendyMsg = async () => {
   });
 };
 
-handleCronSendyMsg();
+// comment or uncomment to handle scheduler
+// handleCronSendyMsg();
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`);

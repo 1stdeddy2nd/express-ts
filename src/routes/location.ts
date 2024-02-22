@@ -17,7 +17,7 @@ router.post(
       const errors = validationResult(req);
       // validation by req body
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(403).json({ errors: errors.array() });
       }
       const { name, timezone } = req.body;
 
@@ -49,13 +49,13 @@ router.post(
 // update
 router.put(
   "/:id",
-  [body("name").isString(), body("timezone").isString()],
+  [body("name").isString().optional(), body("timezone").isString().optional()],
   async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req);
       // validation by req body
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(403).json({ errors: errors.array() });
       }
       const { name, timezone } = req.body;
 
@@ -64,14 +64,14 @@ router.put(
         where: { id: Number(req.params.id) },
       });
       if (!locationById) {
-        return res.status(403).json({ error: { msg: "location not found" } });
+        return res.status(404).json({ error: { msg: "location not found" } });
       }
 
       // check location name must be unique
       const locationByName = await prisma.location.findFirst({
         where: { name },
       });
-      if (locationByName) {
+      if (locationByName && locationByName.id !== Number(req.params.id)) {
         return res
           .status(403)
           .json({ error: { msg: "location name must be unique" } });
@@ -102,7 +102,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
       where: { id: Number(req.params.id) },
     });
     if (!findLocation) {
-      return res.status(403).json({ error: { msg: "location not found" } });
+      return res.status(404).json({ error: { msg: "location not found" } });
     }
 
     // delete it
@@ -119,8 +119,13 @@ router.delete("/:id", async (req: Request, res: Response) => {
 
 // get all
 router.get("/", async (req: Request, res: Response) => {
-  const locations = await prisma.location.findMany();
-  return res.status(200).json({ result: locations });
+  try {
+    const locations = await prisma.location.findMany();
+    return res.status(200).json({ result: locations });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: { msg: "internal server error" } });
+  }
 });
 
 export default router;

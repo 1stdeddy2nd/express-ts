@@ -20,7 +20,7 @@ router.post(
       const errors = validationResult(req);
       // validation by req body
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(403).json({ errors: errors.array() });
       }
       const { first_name, last_name, email, birth_date, location_id } =
         req.body;
@@ -30,7 +30,7 @@ router.post(
         where: { id: location_id },
       });
       if (!findLocation) {
-        return res.status(403).json({ error: { msg: "location not found" } });
+        return res.status(404).json({ error: { msg: "location not found" } });
       }
 
       const user = await prisma.user.create({
@@ -55,18 +55,18 @@ router.post(
 router.put(
   "/:id",
   [
-    body("first_name").isString(),
-    body("last_name").isString(),
-    body("email").isEmail().isString(),
-    body("birth_date").isString(),
-    body("location_id").isInt(),
+    body("first_name").isString().optional(),
+    body("last_name").isString().optional(),
+    body("email").isEmail().isString().optional(),
+    body("birth_date").isString().optional(),
+    body("location_id").isInt().optional(),
   ],
   async (req: Request, res: Response) => {
     try {
       const errors = validationResult(req);
       // validation by req body
       if (!errors.isEmpty()) {
-        return res.status(400).json({ errors: errors.array() });
+        return res.status(403).json({ errors: errors.array() });
       }
       const { first_name, last_name, email, birth_date, location_id } =
         req.body;
@@ -76,7 +76,7 @@ router.put(
         where: { id: req.params.id },
       });
       if (!findUser) {
-        return res.status(403).json({ error: { msg: "user not found" } });
+        return res.status(404).json({ error: { msg: "user not found" } });
       }
 
       // check location exists or not by id
@@ -84,7 +84,7 @@ router.put(
         where: { id: location_id },
       });
       if (!findLocation) {
-        return res.status(403).json({ error: { msg: "location not found" } });
+        return res.status(404).json({ error: { msg: "location not found" } });
       }
 
       const user = await prisma.user.update({
@@ -114,7 +114,7 @@ router.delete("/:id", async (req: Request, res: Response) => {
       where: { id: req.params.id },
     });
     if (!findUser) {
-      return res.status(403).json({ error: { msg: "user not found" } });
+      return res.status(404).json({ error: { msg: "user not found" } });
     }
 
     await prisma.user.delete({

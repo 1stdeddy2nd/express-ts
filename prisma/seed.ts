@@ -28,7 +28,7 @@ async function seed() {
   });
 
   await prisma.user.createMany({
-    data: [...Array(50)].map(() => ({
+    data: [...Array(10)].map(() => ({
       email: faker.internet.email(),
       birth_date: new Date(),
       first_name: faker.person.firstName(),
